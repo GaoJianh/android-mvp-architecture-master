@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tv_showResult.setText(result + "");
             pid = mRemoteService.getPid();
             tv_showPid.setText(pid + "");
+            Toast.makeText(this, "haha", Toast.LENGTH_SHORT).show();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
