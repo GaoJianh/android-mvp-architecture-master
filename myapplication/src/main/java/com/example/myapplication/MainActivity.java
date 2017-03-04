@@ -8,13 +8,14 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-
+    private static final String TAG = "MainActivity";
     private TextView tv_showPid;
     private TextView tv_showResult;
     private Button btn_doAdd;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mRemoteService = IMyAidlInterface.Stub.asInterface(service);
+            Log.e(TAG, "走没走?");
         }
 
         @Override
@@ -36,9 +38,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        bindView();
         Intent intent = new Intent(this, RemoteService.class);
         bindService(intent, conn, Context.BIND_AUTO_CREATE);
-        bindView();
+
     }
 
     private void bindView() {
@@ -54,13 +57,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         try {
             result = mRemoteService.add(3, 5);
-            tv_showResult.setText(result + "");
             pid = mRemoteService.getPid();
-            tv_showPid.setText(pid + "");
-            Toast.makeText(this, "haha", Toast.LENGTH_SHORT).show();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        tv_showResult.setText(result + "");
+        tv_showPid.setText(pid + "");
+        Toast.makeText(this, "haha", Toast.LENGTH_SHORT).show();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        unbindService(conn);
+        super.onDestroy();
     }
 }
