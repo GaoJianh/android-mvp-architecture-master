@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.os.Process;
 import android.os.RemoteException;
@@ -17,7 +18,7 @@ public class RemoteService extends Service {
         return mBinder;
     }
 
-    final IMyAidlInterface.Stub mBinder = new IMyAidlInterface.Stub() {
+    final Binder mBinder = new IMyAidlInterface.Stub() {
 
         @Override
         public int getPid() throws RemoteException {
